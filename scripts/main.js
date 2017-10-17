@@ -1,29 +1,3 @@
-// var canvas = document.getElementById("myCanvas");
-// var context = box_canvas.getContext("2d");
-//
-// function draw_box() {
-//   var player_paddle = box_canvas.getContext("2d");
-//   var computer_paddle = box_canvas.getContext("2d");
-//
-//   box_context.fillRect(0, 0, 600, 300);
-//   player_paddle.clearRect(250, 0, 100, 10);
-//   computer_paddle.clearRect(250, 290, 100, 10);
-// }
-//
-// function draw_paddle() {
-//   var radius = 8;
-//   var startAngle = 0 * Math.PI;
-//   var endAngle = 2 * Math.PI;
-//   var counterClockwise = false;
-//
-//   ball.beginPath();
-//   ball.arc(298, 148, radius, startAngle, endAngle, counterClockwise);
-//   ball.fillStyle = "white";
-//   ball.fill();
-// }
-// draw_box();
-// draw_paddle();
-
 // setting up a 2d context canvas
 var canvas = document.getElementById('myCanvas');
 var width = 400;
@@ -38,11 +12,13 @@ function Paddle(x, y, width, height) {
   this.y = y;
   this.width = width;
   this.height = height;
+  this.x_speed = 0;
+  this.y_speed = 0;
 }
 
 // rendering paddle to the screen
 Paddle.prototype.render = function() {
-  context.fillStyle = "#0000FF";
+  context.fillStyle = "blue";
   context.fillRect(this.x, this.y, this.width, this.height);
 };
 
@@ -75,7 +51,7 @@ function Ball(x, y) {
 Ball.prototype.render = function() {
   context.beginPath();
   context.arc(this.x, this.y, this.radius, 2 * Math.PI, false);
-  context.fillStyle = "#000000";
+  context.fillStyle = "white";
   context.fill();
 };
 
@@ -86,7 +62,7 @@ var ball = new Ball(200, 300);
 
 // rendering the views
 var render = function() {
-  context.fillStyle = "#FF00FF";
+  context.fillStyle = "black";
   context.fillRect(0, 0, width, height);
   player.render();
   computer.render();
@@ -98,8 +74,52 @@ var animate = window.requestAnimationFrame ||
   window.mozRequestAnimationFrame ||
   function(callback) { window.setTimeout(callback, 1000/60) };
 
+// player paddle moving logic
+Paddle.prototype.move = function(x, y) {
+  this.x += x;
+  this.y += y;
+  this.x_speed = x;
+  this.y_speed = y;
+  if (this.x < 0) {
+    this.x = 0;
+    this.x_speed = 0;
+  } else if (this.x + this.width > 400) {
+    this.x = 400 - this.width;
+    this.x_speed = 0;
+  }
+};
+
+var keysDown = {};
+
+Player.prototype.update = function() {
+  for(var key in keysDown) {
+    var value = Number(key);
+    console.log(value);
+    if(value == 37) { // when pressing left arrow, the value is 37
+      this.paddle.move(-4, 0);
+    } else if (value == 39) { // when pressing right arrow, the value is 39
+      this.paddle.move(4, 0);
+    } else {
+      this.paddle.move(0, 0);
+    }
+  }
+};
+
+window.addEventListener("keydown", function(event) {
+  keysDown[event.keyCode] = true;
+});
+
+window.addEventListener("keyup", function(event) {
+  delete keysDown[event.keyCode];
+});
+
+var update = function() {
+  player.update();
+};
+
 // calling render and animate functions
 var step = function() {
+  update();
   render();
   animate(step);
 };
