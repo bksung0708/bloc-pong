@@ -44,6 +44,8 @@ Computer.prototype.render = function() {
 function Ball(x, y) {
   this.x = x;
   this.y = y;
+  this.x_speed = 0;
+  this.y_speed = 4;
   this.radius = 5;
 }
 
@@ -54,6 +56,30 @@ Ball.prototype.render = function() {
   context.fillStyle = "white";
   context.fill();
 };
+
+Ball.prototype.update = function(player_paddle, computer_paddle) {
+  this.x += this.x_speed;
+  this.y += this.y_speed;
+
+  if (this.x - 5 < 0) {
+    this.x_speed = -1 * this.x_speed;
+  } else if (this.x + 5 > 400) {
+    this.x_speed = -1 * this.x_speed;
+  }
+  if (this.y - 5 > 300) {
+    if (this.y - 5 < player_paddle.y + player_paddle.height && this.x + 5 > player_paddle.x && this.x - 5 < (player_paddle.x + player_paddle.width) && this.y + 5 > player_paddle.y) {
+      this.y_speed = -4;
+      this.x_speed += ((this.x - player_paddle.x - 25) * 0.15);
+      this.y += this.y_speed;
+    }
+  } else {
+    if (this.y + 5 > computer_paddle.y && this.x + 5 > computer_paddle.x && this.x - 5 < (computer_paddle.x + computer_paddle.width) && this.y - 5 < computer_paddle.y + computer_paddle.height) {
+      this.y_speed = 4;
+      this.x_speed += ((this.x - computer_paddle.x - 25) * 0.15);
+      this.y += this.y_speed;
+    }
+  }
+}
 
 // building each objects
 var player = new Player();
@@ -94,7 +120,6 @@ var keysDown = {};
 Player.prototype.update = function() {
   for(var key in keysDown) {
     var value = Number(key);
-    console.log(value);
     if(value == 37) { // when pressing left arrow, the value is 37
       this.paddle.move(-4, 0);
     } else if (value == 39) { // when pressing right arrow, the value is 39
@@ -114,6 +139,7 @@ window.addEventListener("keyup", function(event) {
 });
 
 var update = function() {
+  ball.update(player.paddle, computer.paddle);
   player.update();
 };
 
