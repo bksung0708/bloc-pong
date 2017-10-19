@@ -6,6 +6,9 @@ canvas.width = width;
 canvas.height = height;
 var context = canvas.getContext('2d');
 
+var player_score = 0;
+var computer_score = 0;
+
 // paddle content
 function Paddle(x, y, width, height) {
   this.x = x;
@@ -91,6 +94,21 @@ Ball.prototype.update = function(player_paddle, computer_paddle) {
       this.x_speed += ((this.x - computer_paddle.x - 25) * 0.15);
       this.y += this.y_speed;
     }
+  }
+  var reset_ball = function(value) {
+    value.x = 200;
+    value.y = 300;
+    value.x_speed = 0;
+    value.y_speed = 3;
+  }
+  if (this.y > 700) {
+    computer_score += 1;
+    document.getElementById('computerScore').innerHTML = computer_score;
+    reset_ball(this);
+  } else if (this.y < -100) {
+    player_score += 1;
+    document.getElementById('playerScore').innerHTML = player_score;
+    reset_ball(this);
   }
 }
 
