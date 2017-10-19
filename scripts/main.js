@@ -40,12 +40,23 @@ Computer.prototype.render = function() {
   this.paddle.render();
 };
 
+Computer.prototype.update = function(ball) {
+  var diff = ball.x - (this.paddle.x + 25);
+  if (diff > 0 && diff > 10) {
+    this.paddle.move(5.2, 0);
+  } else if (diff < 0 && diff < -10) {
+    this.paddle.move(-5.2, 0);
+  } else {
+    this.paddle.move(0, 0);
+  }
+};
+
 // ball content
 function Ball(x, y) {
   this.x = x;
   this.y = y;
   this.x_speed = 0;
-  this.y_speed = 4;
+  this.y_speed = 3;
   this.radius = 5;
 }
 
@@ -61,18 +72,20 @@ Ball.prototype.update = function(player_paddle, computer_paddle) {
   this.x += this.x_speed;
   this.y += this.y_speed;
 
-  if (this.x - 5 < 0) {
+  if (this.x - 5 < 0) { // hitting the left-side wall
     this.x_speed = -1 * this.x_speed;
-  } else if (this.x + 5 > 400) {
+  } else if (this.x + 5 > 400) { // hitting the right-side wall
     this.x_speed = -1 * this.x_speed;
   }
   if (this.y - 5 > 300) {
+    // hitting the player paddle
     if (this.y - 5 < player_paddle.y + player_paddle.height && this.x + 5 > player_paddle.x && this.x - 5 < (player_paddle.x + player_paddle.width) && this.y + 5 > player_paddle.y) {
       this.y_speed = -4;
       this.x_speed += ((this.x - player_paddle.x - 25) * 0.15);
       this.y += this.y_speed;
     }
   } else {
+    //hitting the computer paddle
     if (this.y + 5 > computer_paddle.y && this.x + 5 > computer_paddle.x && this.x - 5 < (computer_paddle.x + computer_paddle.width) && this.y - 5 < computer_paddle.y + computer_paddle.height) {
       this.y_speed = 4;
       this.x_speed += ((this.x - computer_paddle.x - 25) * 0.15);
@@ -139,6 +152,7 @@ window.addEventListener("keyup", function(event) {
 });
 
 var update = function() {
+  computer.update(ball);
   ball.update(player.paddle, computer.paddle);
   player.update();
 };
