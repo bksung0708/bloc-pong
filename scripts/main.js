@@ -5,7 +5,7 @@ var height = 600;
 canvas.width = width;
 canvas.height = height;
 var context = canvas.getContext('2d');
-var max_score = 5;
+var max_score = 1;
 
 // paddle content
 function Paddle(x, y, width, height) {
@@ -135,7 +135,7 @@ Ball.prototype.update = function(player_paddle, computer_paddle) {
       this.x_speed += ((this.x - player_paddle.x - 25) * 0.15);
       this.y += this.y_speed;
     }
-  } else {
+   else {
     //hitting the computer paddle
     if (this.y + 5 > computer_paddle.y && this.x + 5 > computer_paddle.x && this.x - 5 < (computer_paddle.x + computer_paddle.width) && this.y - 5 < computer_paddle.y + computer_paddle.height) {
       this.y_speed = 4;
