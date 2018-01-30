@@ -11,3 +11,5 @@ Control the Paddle, Animate the Ball, Create the Computer AI In these tasks, I w
 Display the Live Score In this tasks, I wrote code to display the score using the innerHTML property.
 
 End the Game In this task, I capped the score so that either the player or computer would win once the their score reached 11 points. Once 11 points are reached by either user, the game ends. The user will need to refresh the browser to play again.
+
+![alt text]({{ site.baseurl }}/img/img1.png)
