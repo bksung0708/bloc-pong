@@ -1,8 +1,7 @@
 # bloc-pong
-
-## Introduction
 BlocPong uses pure JavaScript and the HTML5 canvas element to create a classic pong replica.
 
+## Explanation
 The objective of Bloc Pong is to outscore the computer. The rules are simple. The first player to 11 points win the game. Here's a deeper look at the steps taken to create replica of pong.
 
 Create Visuals In this task, I created a number of elements including the table, paddles, and ball.
